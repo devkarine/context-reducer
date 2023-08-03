@@ -35,7 +35,7 @@ npm install
 npm run dev
 ```
 
-![React vite printscreen](../images/react-vite.png)
+![React vite printscreen](.gitlab/react-vite.png)
 
 Pronto! Agora você já tem um projeto React criado com o Vite que deverá estar rodando seu `localhost`, a porta deverá ser informada no terminal.
 
@@ -255,11 +255,11 @@ describe("App test", () => {
 
 Rode o comando `npm run test` e veja se os testes passam. Se tudo estiver certo, você deverá ver algo assim:
 
-![Testes do Jest](../images/react-vite-jest.png)
+![Testes do Jest](.gitlab/react-vite-jest.png)
 
 E para checar a cobertura de testes, rode o comando `npm run test:coverage` e veja se está tudo certo.
 
-![Coverage de testes do Jest](../images/react-vite-jest-cov.png)
+![Coverage de testes do Jest](.gitlab/react-vite-jest-cov.png)
 
 ## Links e dicas
 
