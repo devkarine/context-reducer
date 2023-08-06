@@ -1,14 +1,34 @@
 # Iniciando um projeto React
 
+## Bundlers e Compilers
+
+Antes de começarmos a falar sobre React, precisamos entender alguns conceitos que são importantes para o desenvolvimento de aplicações React. ECMA Script, que é o padrão para a linguagem base do Javascript, possui diversas versões, como o ES5, ES6, ES7, etc. Cada versão possui novas funcionalidades e melhorias, porém nem todos os navegadores suportam todas as versões ([site](https://caniuse.com/) para nos ajudar a saber as compatibilidades). Por isso, precisamos de ferramentas que transformem nosso código para que ele possa ser executado em todos os navegadores. São ferramentas cruciais que desempenham um papel importante na transformação, otimização e compatibilização do código fonte escrito pelos desenvolvedores para que ele possa ser executado.
+
+### Compilar
+
+Traduzir o código-fonte de uma linguagem de programação para outra linguagem, normalmente de uma linguagem de alto nível para uma linguagem de baixo nível.
+
+### Transpilar
+
+É similar a compilar, porém ele não traduz o código-fonte de uma linguagem de programação para uma linguagem de baixo nível, mas sim para outra linguagem de programação do mesmo nível. Por exemplo, o TypeScript é uma linguagem de programação de alto nível que é transpilada para JavaScript, que também é uma linguagem de programação de alto nível.
+
+### Bundlers
+
+Ferramenta que agrupa e combina vários arquivos JavaScript e seus recursos relacionados em um único arquivo (ou em alguns poucos arquivos) para serem usados em um aplicativo web. Essa abordagem é conhecida como "empacotamento" ou "bundling". Assim, ele organizam e gerenciam as dependências do projeto, permitindo que você use e importe módulos JavaScript de terceiros como se fossem módulos locais instalados no projeto.
+
+Os bundlers também podem realizar outras tarefas, como transpilação de código (conversão de código de uma versão de JavaScript para outra, por exemplo, ES6+ para ES5), otimização de código, minificação (redução do tamanho do código removendo espaços em branco e comentários), e até mesmo suporte a recursos como CSS, imagens e fontes, incorporando-os no bundle final.
+
+No mundo do JavaScript, os bundlers mais conhecidos são o [Webpack](https://webpack.js.org/), [Babel](https://babeljs.io/), [Vite](https://vitejs.dev/), [Snowpack](https://www.snowpack.dev/), entre outros.
+
 ## Criando um projeto React
 
 Por muito tempo o React foi criado com o famoso boilerplate `create-react-app`, ou seja, um pacote que cria um projeto inicial com várias configurações já predefinidas. Porém, nesse ano de 2023, o pessoal responsável pelo projeto lançou uma nova documentação que já não recomenda mais o uso do `create-react-app` e sim o uso de outros frameworks do React como o `Next.js`, `Remix` `Gatsby`. Você pode conferir [aqui](https://react.dev/learn/start-a-new-react-project).
 
-Esses frameworks são mais completos e possuem mais funcionalidades que o antigo `create-react-app`, pois já nos trazem uma estrutura pronta para o desenvolvimento de uma aplicação React. Além disso, eles já possuem configurações de rotas, de estilização, de testes, de deploy, entre outras coisas.
+Esses frameworks são mais completos e possuem mais funcionalidades que o antigo `create-react-app`, pois já nos trazem uma estrutura bem maior pronta para o desenvolvimento de uma aplicação React. Além disso, eles já possuem configurações de rotas, de estilização, de testes, de deploy, entre outras coisas.
 
 Acredito que tudo isso é React e que pra utiliza-lo juntamente com esses frameworks, você precisa saber React. Por isso, vamos focar no React de forma mais simples utilizando o [Vite](https://vitejs.dev/guide/) que é um bundler que nos permite criar diversos tipos de projetos, como projetos React, Vue, Svelte, etc.
 
-Lembrando que precisamos ter o node instalado pelo menos na versão 16. Podemos usar os principais gerenciadores de pacotes da atualidade, como o `npm`, `yarn` e o `pnpm`. Nesse curso, vamos utilizar o `npm` para criar nosso projeto React, mas fique a vontade para usar o de sua preferência.
+Lembrando que precisamos ter o node instalado pelo menos na versão 16. Podemos usar os principais gerenciadores de pacotes da atualidade, como o `npm`, `yarn` e o `pnpm`. Nesse exemplo, vamos utilizar o `npm` para criar nosso projeto React, mas fique a vontade para usar o de sua preferência.
 
 Para criar um projeto React com o Vite, basta executar o seguinte comando:
 
@@ -37,7 +57,7 @@ npm run dev
 
 ![React vite printscreen](.gitlab/react-vite.png)
 
-Pronto! Agora você já tem um projeto React criado com o Vite que deverá estar rodando seu `localhost`, a porta deverá ser informada no terminal.
+Pronto! Agora você já tem um projeto React criado com o Vite que deverá estar rodando seu `localhost`, a porta deverá ser informada no terminal. Ao alterar algum arquivo, o Vite irá recarregar a página automaticamente, pois o vite já traz esse comportamento de _hot reload_ para nós.
 
 ## Estrutura do projeto
 
@@ -66,7 +86,7 @@ Já as pastas são:
 - `public`: pasta que contém os arquivos públicos do projeto, onde normalmente colocamos favicon, imagens, etc.
 - `src`: pasta que contém os arquivos do projeto, nela que iremos trabalhar colocando nosso código.
   - `assets`: pasta que contém os arquivos estáticos do projeto, como imagens, fontes, etc.
-  - `main.tsx`: arquivo que contém o ponto de entrada da aplicação.
+  - `main.tsx`: arquivo que contém o ponto de entrada da aplicação, nele nós importamos o React e o ReactDOM e renderizamos o componente principal da aplicação. Aqui também é onde importamos o componente App, envolto de um [StrictMode](https://react.dev/reference/react/StrictMode) que é um componente do React que nos ajuda a encontrar problemas na aplicação.
   - `App.tsx`: arquivo que contém o componente principal da aplicação.
   - `App.css`: arquivo que contém o estilo do componente principal da aplicação.
   - `index.css`: arquivo que contém o estilo global da aplicação.
@@ -76,8 +96,9 @@ Os projetos em React possuem uma estrutura bem simples, mas que pode ser modific
 Seria bom também adicionar um arquivo pro eslint ignorar algumas pastas. Para isso, crie um arquivo `.eslintignore` na raiz do projeto com o seguinte conteúdo:
 
 ```
-node_modules
-dist
+node_modules/
+dist/
+env.d.ts
 ```
 
 ### Adicionando Prettier
@@ -112,8 +133,8 @@ module.exports = {
   // ...
   extends: [
     // ...
-    "plugin:prettier/recommended",
-  ],
+    'eslint-config-prettier'
+  ]
   // ...
 };
 ```
@@ -127,6 +148,13 @@ Por fim, vamos adicionar um script no `package.json` para que o `prettier` possa
     "format": "prettier --write \"src/**/*.{ts,tsx}\""
   }
 }
+```
+
+Para o prettier ignorar algumas pastas, crie um arquivo `.prettierignore` na raiz do projeto com o seguinte conteúdo:
+
+```
+node_modules/
+dist/
 ```
 
 ### Adicionando ambiente de testes
@@ -163,28 +191,28 @@ Crie um arquivo na raiz do projeto chamado `jest.config.cjs` com o seguinte cont
 
 ```cjs
 module.exports = {
-  testEnvironment: "jest-environment-jsdom",
-  testMatch: ["**/__tests__/**/*.ts?(x)", "**/?(*.)+(spec|test).ts?(x)"],
-  testPathIgnorePatterns: ["/node_modules/", "/dist/"],
-  setupFilesAfterEnv: ["<rootDir>/setup-test.js"],
-  transformIgnorePatterns: ["<rootDir>/node_modules/"],
-  preset: "ts-jest",
+  testEnvironment: 'jest-environment-jsdom',
+  testMatch: ['**/__tests__/**/*.ts?(x)', '**/?(*.)+(spec|test).ts?(x)'],
+  testPathIgnorePatterns: ['/node_modules/', '/dist/'],
+  setupFilesAfterEnv: ['<rootDir>/setup-test.js'],
+  transformIgnorePatterns: ['<rootDir>/node_modules/'],
+  preset: 'ts-jest',
   transform: {
-    "^.+\\.(ts|tsx)?$": "ts-jest",
-    "^.+\\.(js|jsx)$": "babel-jest",
+    '^.+\\.(ts|tsx)?$': 'ts-jest',
+    '^.+\\.(js|jsx)$': 'babel-jest'
   },
   moduleNameMapper: {
-    "^.+\\.svg$": "jest-svg-transformer",
-    "\\.(css|less|scss)$": "identity-obj-proxy",
+    '^.+\\.svg$': 'jest-svg-transformer',
+    '\\.(css|less|scss)$': 'identity-obj-proxy'
   },
-  collectCoverageFrom: ["<rootDir>/src/**/*.{js,jsx,ts,tsx}"],
+  collectCoverageFrom: ['<rootDir>/src/**/*.{js,jsx,ts,tsx}']
 };
 ```
 
 Crie também um arquivo na raiz do projeto chamado `setup-test.js` com o seguinte conteúdo:
 
 ```js
-require("@testing-library/jest-dom");
+import '@testing-library/jest-dom';
 ```
 
 Para a configuração do Babel, crie um arquivo na raiz do projeto chamado `babel.config.cjs` com o seguinte conteúdo:
@@ -192,10 +220,10 @@ Para a configuração do Babel, crie um arquivo na raiz do projeto chamado `babe
 ```js
 module.exports = {
   presets: [
-    ["@babel/preset-env", { targets: { esmodules: "true" } }],
-    ["@babel/preset-react", { runtime: "automatic" }],
-    "@babel/preset-typescript",
-  ],
+    ['@babel/preset-env', { targets: { esmodules: 'true' } }],
+    ['@babel/preset-react', { runtime: 'automatic' }],
+    '@babel/preset-typescript'
+  ]
 };
 ```
 
@@ -228,27 +256,27 @@ O modo `coverage` irá gerar um relatório de cobertura de testes, mostrando qua
 Agora para testar se está tudo conforme esperamos, vamos criar um arquivo de testes para o componente `App.tsx`. Crie um arquivo `App.spec.tsx` ou `App.test.tsx` com o seguinte conteúdo:
 
 ```tsx
-import { fireEvent, render, screen } from "@testing-library/react";
-import App from "./App";
+import { fireEvent, render, screen } from '@testing-library/react';
+import App from './App';
 
-describe("App test", () => {
-  it("should render App component", () => {
+describe('App test', () => {
+  it('should render App component', () => {
     render(<App />);
-    expect(screen.getByText("Vite + React")).toBeInTheDocument();
+    expect(screen.getByText('Vite + React')).toBeInTheDocument();
   });
 
-  it("should start with count 0", () => {
+  it('should start with count 0', () => {
     render(<App />);
-    expect(screen.getByText("count is 0")).toBeInTheDocument();
+    expect(screen.getByText('count is 0')).toBeInTheDocument();
   });
 
-  it("should increment count when button is clicked", () => {
+  it('should increment count when button is clicked', () => {
     render(<App />);
-    const button = screen.getByRole("button");
+    const button = screen.getByRole('button');
     fireEvent.click(button);
-    expect(screen.getByText("count is 1")).toBeInTheDocument();
+    expect(screen.getByText('count is 1')).toBeInTheDocument();
     fireEvent.click(button);
-    expect(screen.getByText("count is 2")).toBeInTheDocument();
+    expect(screen.getByText('count is 2')).toBeInTheDocument();
   });
 });
 ```
