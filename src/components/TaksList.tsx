@@ -1,17 +1,17 @@
 import { useEffect } from 'react';
-import { useTodo } from '../contexts/useTodo';
 import { Task } from './Task';
+import { useAppSelector } from '../hooks';
 
 export const TaksList = () => {
-  const { tasks } = useTodo();
+  const tasksRedux = useAppSelector(state => state.todo);
 
   useEffect(() => {
-    console.log({ tasks });
-  }, [tasks]);
+    console.log({ tasksRedux });
+  }, [tasksRedux]);
 
   return (
     <ul>
-      {tasks.map(task => (
+      {tasksRedux.map(task => (
         <li key={task.id}>
           <Task task={task} />
         </li>

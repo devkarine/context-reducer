@@ -1,16 +1,14 @@
 import { useState } from 'react';
-import { useTodo } from '../contexts/useTodo';
+import { useAppDispatch } from '../hooks';
+import { addTodo } from '../reducers/todoSlice';
 
 export const AddTask = () => {
-  const { dispatch } = useTodo();
-
   const [text, setText] = useState('');
 
+  const dispatchRedux = useAppDispatch();
+
   const onAdd = (text: string) => {
-    dispatch({
-      type: 'add',
-      text
-    });
+    dispatchRedux(addTodo({ text }));
   };
 
   return (

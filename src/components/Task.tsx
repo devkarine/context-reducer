@@ -1,29 +1,26 @@
 import { useState } from 'react';
 import { Todo } from '../types/Todo';
-import { useTodo } from '../contexts/useTodo';
+import { useAppDispatch } from '../hooks';
+import { changeTodo, deleteTodo } from '../reducers/todoSlice';
 
-
-export const Task = ({
-  task,
-}: {
-  task: Todo
-}) => {
+export const Task = ({ task }: { task: Todo }) => {
   const [isEditing, setIsEditing] = useState(false);
 
-  const { dispatch } = useTodo();
-  
-  const onChange = (task: Todo) => {
-    dispatch({
-      type: 'changed',
-      task
-    });
+  const [text, setText] = useState(task.text);
+
+  const dispatchRedux = useAppDispatch();
+
+  const onSave = () => {
+    dispatchRedux(
+      changeTodo({
+        ...task,
+        text
+      })
+    );
   };
 
   const onDelete = (id: number) => {
-    dispatch({
-      type: 'delete',
-      id
-    });
+    dispatchRedux(deleteTodo({ id: id }));
   };
 
   return (
@@ -32,22 +29,25 @@ export const Task = ({
         type="checkbox"
         checked={task.done}
         onChange={e => {
-          onChange({
-            ...task,
-            done: e.target.checked
-          });
-        }} />
+          dispatchRedux(
+            changeTodo({
+              ...task,
+              done: e.target.checked
+            })
+          );
+        }}
+      />
       {isEditing ? (
         <>
-          <input
-            value={task.text}
-            onChange={e => {
-              onChange({
-                ...task,
-                text: e.target.value
-              });
-            }} />
-          <button onClick={() => setIsEditing(false)}>Save</button>
+          <input value={text} onChange={e => setText(e.target.value)} />
+          <button
+            onClick={() => {
+              setIsEditing(false);
+              onSave();
+            }}
+          >
+            Save
+          </button>
         </>
       ) : (
         <>
@@ -55,7 +55,7 @@ export const Task = ({
           <button onClick={() => setIsEditing(true)}>Edit</button>
         </>
       )}
-       <button onClick={() => onDelete(task.id)}>Delete</button>
+      <button onClick={() => onDelete(task.id)}>Delete</button>
     </label>
   );
 };
